@@ -1,4 +1,4 @@
-TARGET= main
+TARGET = uart
 LIBS = -lm
 CC = gcc
 CFLAGS = -g -Wall

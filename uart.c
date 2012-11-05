@@ -1,13 +1,17 @@
 #include <stdio.h>
-#include <unistd.h>			//Used for UART
-#include <fcntl.h>			//Used for UART
+#include <unistd.h>             //Used for UART
+#include <fcntl.h>              //Used for UART
 #include <termios.h>		//Used for UART
-Setting Up The UART
+
+
+int main(int argv, char * argc[])
+{
+// Setting Up The UART
 
 	//-------------------------
 	//----- SETUP USART 0 -----
 	//-------------------------
-	//At bootup, pins 8 and 10 are already set to UART0_TXD, UART0_RXD (ie the alt0 function) respectively
+	//At bootup, pins 8 and 10 are already set to UART0_TXD, UART0_RXD (ie         the alt0 function) respectively
 	int uart0_filestream = -1;
 	
 	//OPEN THE UART
@@ -22,6 +26,8 @@ Setting Up The UART
 	//											immediately with a failure status if the output can't be written immediately.
 	//
 	//	O_NOCTTY - When set and path identifies a terminal device, open() shall not cause the terminal device to become the controlling terminal for the process.
+
+
 	uart0_filestream = open("/dev/ttyAMA0", O_RDWR | O_NOCTTY | O_NDELAY);		//Open in non blocking read/write mode
 	if (uart0_filestream == -1)
 	{
@@ -48,7 +54,9 @@ Setting Up The UART
 	options.c_oflag = 0;
 	tcflush(uart0_filestream, TCIFLUSH);
 	tcsetattr(uart0_filestream, TCSANOW, &options);
-Transmitting Bytes
+
+
+	//Transmitting Bytes
 
 	//----- TX BYTES -----
 	unsigned char tx_buffer[20];
@@ -69,7 +77,7 @@ Transmitting Bytes
 			printf("UART TX error\n");
 		}
 	}
-Receiving Bytes
+	//Receiving Bytes
 
 	//----- CHECK FOR ANY RX BYTES -----
 	if (uart0_filestream != -1)
@@ -85,6 +93,7 @@ Receiving Bytes
 		else if (rx_length == 0)
 		{
 			//No data waiting
+		  printf("no data UART RX   test commit\n");
 		}
 		else
 		{
@@ -93,7 +102,10 @@ Receiving Bytes
 			printf("%i bytes read : %s\n", rx_length, rx_buffer);
 		}
 	}
-Closing the UART if no longer needed
+//Closing the UART if no longer needed
 
 	//----- CLOSE THE UART -----
 	close(uart0_filestream);
+ 
+  return 0;
+}
